@@ -16,3 +16,31 @@
 # https://www.brycekho.com/uploads/2/5/0/8/25083559/11x17-ghost-shiny_orig.jpg
 # https://www.brycekho.com/portfolio.html
 # https://konachan.com/post/show?md5=401d5e4fb96f31ba7f530729a9de8419
+
+puzzles = [
+  {name: "Where's Waldo?", image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"}
+]
+
+characters = {
+  "Where's Waldo?": [
+    {
+      name: "Waldo",
+      x_range: [0.646, 0.693],
+      y_range: [0.295, 0.396],
+      image_url: ""
+    },
+    {
+      name: "Wizard",
+      x_range: [0.619, 0.675],
+      y_range: [0.831, 0.892],
+      image_url: 
+    }
+  ]
+}
+
+puzzles.each do |puzzle|
+  new_puzzle = Puzzle.find_or_create_by!(puzzle)
+  characters[puzzle[:name]].each do |character|
+    Character.find_or_create_by!(**character, puzzle_id: new_puzzle.id)
+  end
+end
