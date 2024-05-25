@@ -1,0 +1,22 @@
+{
+  "name": "photo-tagger",
+  "version": "1.0.0",
+  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "engines": {
+    "node": "20.9.0"
+  },
+  "scripts": {
+    "clear": "rm -rf public/",
+    "build": "yarn --cwd client install && yarn --cwd client build",
+    "deploy": "yarn clear && cp -a client/dist/. public/",
+    "heroku-postbuild": "yarn build && yarn deploy"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

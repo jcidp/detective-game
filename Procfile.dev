@@ -1,0 +1,2 @@
+api: PORT=3000 rails s
+web: PORT=3001 yarn --cwd client dev
