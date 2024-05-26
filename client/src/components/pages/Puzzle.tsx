@@ -25,8 +25,8 @@ const Puzzle = () => {
 
   useEffect(() => {
     const getGame = async () => {
-        const game_id = await fetchAPI<string>({url: "/api/v1/games/create", options: charactersOptions});
-        setGame(game_id);
+        const game = await fetchAPI<string>({url: "/api/v1/games", options: charactersOptions});
+        setGame(game);
     };
 
     getGame();
@@ -47,10 +47,10 @@ const Puzzle = () => {
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
     const getData = async () => {
-      return await fetchAPI<string>({url: "/api/v1/characters/validate", options: {
-        method: "POST",
+      return await fetchAPI<number[]>({url: `/api/v1/games/${game}`, options: {
+        method: "PUT",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({name, x: coordinates.x, y: coordinates.y, game})
+        body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
       }});
     };
 

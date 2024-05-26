@@ -4,9 +4,4 @@ class Api::V1::CharactersController < ApplicationController
     @characters = puzzle.characters
     render json: @characters
   end
-
-  def validate
-    @result = Character.validate_coordinates(params[:name], params[:x], params[:y])
-    render json: @result
-  end
 end

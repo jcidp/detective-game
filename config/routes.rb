@@ -2,9 +2,8 @@ Rails.application.routes.draw do
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
       resources :puzzles, only: [:index]
-      resources :games, only: [:create, :update]
       post "/characters/puzzle", to: "characters#puzzle"
-      post "/characters/validate", to: "characters#validate"
+      resources :games, only: [:create, :update]
     end
   end
 
