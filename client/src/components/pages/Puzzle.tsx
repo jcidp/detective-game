@@ -1,5 +1,6 @@
+import fetchAPI from "@/helpers/fetchAPI";
 import useFetchData from "@/hooks/useFetchData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const charactersOptions = {
   method: "POST",
@@ -20,6 +21,16 @@ const Puzzle = () => {
   const [characters, error, loading] = useFetchData<Character[]>({url: "/api/v1/characters/puzzle", options: charactersOptions});
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
   const [coordinates, setCoordinates] = useState({x: 0, y: 0});
+  const [game, setGame] = useState<string | undefined>();
+
+  useEffect(() => {
+    const getGame = async () => {
+        const game_id = await fetchAPI<string>({url: "/api/v1/games/create", options: charactersOptions});
+        setGame(game_id);
+    };
+
+    getGame();
+  }, [])
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
@@ -36,26 +47,15 @@ const Puzzle = () => {
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
     const getData = async () => {
-      try {
-        const response = await fetch("/api/v1/characters/validate", {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
-        });
-        if (response.status >= 400) {
-          throw new Error("server error");
-        }
-        const result: boolean = await response.json();
-        console.log(result);
-        return result;
-      } catch (error) {
-        if (error instanceof Error) console.log("Fetching data error: ", error);
-        else throw Error("Unknown error while fetching data.");
-      }
+      return await fetchAPI<string>({url: "/api/v1/characters/validate", options: {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({name, x: coordinates.x, y: coordinates.y, game})
+      }});
     };
 
-    const validationResult = getData();
-    console.log(`Validation result: ${validationResult}`);
+    /*const validationResult = */ getData();
+    // console.log(`Validation result: ${validationResult}`);
   };
 
   const closeBackdrop = () => {

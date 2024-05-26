@@ -1,15 +1,7 @@
+import { FetchProps } from "@/types";
 import { useEffect, useState } from "react"
 
-interface UseFetchDataProps {
-  url: string;
-  options: undefined | {
-    method: string;
-    headers: {[header: string]: string};
-    body: string;
-  }
-}
-
-const useFetchData = <DataType>({url, options = undefined}: UseFetchDataProps): [DataType | undefined, Error | null, boolean] => {
+const useFetchData = <DataType>({url, options = undefined}: FetchProps): [DataType | undefined, Error | null, boolean] => {
   const [data, setData] = useState<DataType | undefined>();
   const [error, setError] = useState<Error|null>(null);
   const [loading, setLoading] = useState(true);
