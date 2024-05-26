@@ -1,7 +1,7 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Home from "./components/pages/Home";
-import Game from "./components/pages/Game";
+import Puzzle from "./components/pages/Puzzle";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -10,7 +10,7 @@ const Router = () => {
       element: <App />,
       children: [
         {index: true, element: <Home />},
-        {path: "/game/:name", element: <Game />}
+        {path: "/puzzle/:name", element: <Puzzle />}
       ]
     }
   ]);

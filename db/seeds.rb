@@ -22,18 +22,18 @@ puzzles = [
 ]
 
 characters = {
-  "Where's Waldo?": [
+  "Where's Waldo?" => [
     {
       name: "Waldo",
       x_range: [0.646, 0.693],
       y_range: [0.295, 0.396],
-      image_url: ""
+      image_url: "https://static.wikia.nocookie.net/waldo/images/9/9d/Character.Waldo.jpg/revision/latest"
     },
     {
       name: "Wizard",
       x_range: [0.619, 0.675],
       y_range: [0.831, 0.892],
-      image_url: 
+      image_url: "https://static.wikia.nocookie.net/waldo/images/6/60/Character.Whitebeard.jpg/revision/latest"
     }
   ]
 }

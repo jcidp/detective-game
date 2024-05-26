@@ -1,2 +1,2 @@
-api: PORT=3000 rails s
-web: PORT=3001 yarn --cwd client dev
+web: PORT=3000 yarn --cwd client dev
+api: PORT=3001 rails s

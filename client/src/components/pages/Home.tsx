@@ -9,7 +9,7 @@ const Home = () => {
         <p>When you find one, click on it and select the character.</p>
       </div>
       <div className="games mt-8 grid grid-cols-3">
-        <Link to="game/test">
+        <Link to="puzzle/test">
           <Card>
             <CardHeader>
               <CardTitle>Where's Waldo</CardTitle>
