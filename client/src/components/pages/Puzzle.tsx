@@ -21,15 +21,12 @@ const Puzzle = () => {
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
   const [coordinates, setCoordinates] = useState({x: 0, y: 0});
 
-
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
     const x = e.pageX - (e.target.offsetLeft || 0);
     const y = e.pageY - (e.target.offsetTop || 0);
     const x_percent = Math.round(x / e.target.offsetWidth * 1000) / 1000;
     const y_percent = Math.round(y / e.target.offsetHeight * 1000) / 1000;
-    // console.log(`x: ${x}, y: ${y}`);
-    // console.log(`x_percent: ${x_percent}, y_percent: ${y_percent}`);
     setSquare({display: true, x: e.pageX, y: e.pageY});
     setCoordinates({x: x_percent, y: y_percent});
   };
@@ -37,7 +34,28 @@ const Puzzle = () => {
   const validateSelection = (e: React.MouseEvent<HTMLUListElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
-    // console.log(`Validation result: ${validationResult}`);
+    const name = e.target.textContent;
+    const getData = async () => {
+      try {
+        const response = await fetch("/api/v1/characters/validate", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
+        });
+        if (response.status >= 400) {
+          throw new Error("server error");
+        }
+        const result: boolean = await response.json();
+        console.log(result);
+        return result;
+      } catch (error) {
+        if (error instanceof Error) console.log("Fetching data error: ", error);
+        else throw Error("Unknown error while fetching data.");
+      }
+    };
+
+    const validationResult = getData();
+    console.log(`Validation result: ${validationResult}`);
   };
 
   const closeBackdrop = () => {
@@ -62,7 +80,7 @@ const Puzzle = () => {
       <img className="my-8 hover:cursor-cell" onClick={handleImageClick}
         src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
       />
-      { square.display && <SelectionMenu characters={["Waldo", "Wizard", "Chef"]} x={square.x} y={square.y}
+      { square.display && <SelectionMenu characters={characters?.map(character => character.name) || []} x={square.x} y={square.y}
         validateSelection={validateSelection} closeBackdrop={closeBackdrop}/>}
     </>
   );
