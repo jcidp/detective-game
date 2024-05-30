@@ -14,19 +14,26 @@ interface Character {
   image_url: string;
 }
 
+interface Game {
+  created_at: string;
+  end_time: string;
+  username: string;
+  characters_found: number[];
+}
+
 const Puzzle = () => {
   const [characters, error, loading] = useFetchData<Character[]>({url: "/api/v1/characters/puzzle", options: charactersOptions});
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
   const [coordinates, setCoordinates] = useState({x: 0, y: 0});
-  const [game, setGame] = useState<string | undefined>();
+  const [gameId, setGameId] = useState<string | undefined>();
   const [foundCharacters, setFoundCharacters] = useState<number[]>([]);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
 
   useEffect(() => {
     const getGame = async () => {
-        const game = await fetchAPI<string>({url: "/api/v1/games", options: charactersOptions});
-        setGame(game);
+        const gameId = await fetchAPI<string>({url: "/api/v1/games", options: charactersOptions});
+        setGameId(gameId);
         setTimerActive(true);
     };
 
@@ -56,23 +63,25 @@ const Puzzle = () => {
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
     const getValidation = async () => {
-      const foundIds = await fetchAPI<number[]>({url: `/api/v1/games/${game}`, options: {
+      const game = await fetchAPI<Game>({url: `/api/v1/games/${gameId}`, options: {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
       }});
-      if (foundIds) {
-        setFoundCharacters(foundIds);
-        if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver();
-      }
+      if (!game) return;
+      const foundIds = game.characters_found
+      setFoundCharacters(foundIds);
+      if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver(game);
       if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) alert("That character isn't there. Keep trying!");
     };
     getValidation();
   };
 
-  const handleGameOver = () => {
+  const handleGameOver = (game: Game) => {
     setTimerActive(false);
-    alert(`You won! Your time was ${timer}`);
+    const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
+    setTimer(() => game_duration);
+    setTimeout(() => alert(`You won! Your time was ${game_duration}`), 10);
   };
 
   const closeBackdrop = () => {
