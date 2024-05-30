@@ -12,9 +12,6 @@ interface Character {
   id: number;
   name: string;
   image_url: string;
-  x_range: number[];
-  y_range: number[];
-  puzzle_id: number;
 }
 
 const Puzzle = () => {
@@ -22,15 +19,27 @@ const Puzzle = () => {
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
   const [coordinates, setCoordinates] = useState({x: 0, y: 0});
   const [game, setGame] = useState<string | undefined>();
+  const [foundCharacters, setFoundCharacters] = useState<number[]>([]);
+  const [timer, setTimer] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
 
   useEffect(() => {
     const getGame = async () => {
         const game = await fetchAPI<string>({url: "/api/v1/games", options: charactersOptions});
         setGame(game);
+        setTimerActive(true);
     };
 
     getGame();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (!timerActive) return;
+    const intervalId = setInterval(() => {
+      setTimer(t => t + 0.01);
+    }, 10);
+    return () => clearInterval(intervalId);
+  }, [timerActive]);
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
@@ -46,16 +55,24 @@ const Puzzle = () => {
     if (!(e.target instanceof HTMLElement)) return;
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
-    const getData = async () => {
-      return await fetchAPI<number[]>({url: `/api/v1/games/${game}`, options: {
+    const getValidation = async () => {
+      const foundIds = await fetchAPI<number[]>({url: `/api/v1/games/${game}`, options: {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
       }});
+      if (foundIds) {
+        setFoundCharacters(foundIds);
+        if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver();
+      }
+      if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) alert("That character isn't there. Keep trying!");
     };
+    getValidation();
+  };
 
-    /*const validationResult = */ getData();
-    // console.log(`Validation result: ${validationResult}`);
+  const handleGameOver = () => {
+    setTimerActive(false);
+    alert(`You won! Your time was ${timer}`);
   };
 
   const closeBackdrop = () => {
@@ -69,13 +86,15 @@ const Puzzle = () => {
       <div className="controls">
         <div className="characters my-2 border rounded-lg flex justify-around">
           {!error && !loading && characters && characters.map(character => (
-            <div key={character.id} className="character flex gap-4">
+            <div key={character.id}
+              className={`character flex gap-4 ${foundCharacters.includes(character.id) && "line-through text-slate-400"}`}
+            >
               <img src={character.image_url} alt={character.name} />
               <p>{character.name}</p>
             </div>
           ))}
         </div>
-        <p className="timer text-xl font-semibold text-center">00:00:01</p>
+        <p className="timer text-xl font-semibold text-center">{timer.toFixed(3)}</p>
       </div>
       <img className="my-8 hover:cursor-cell" onClick={handleImageClick}
         src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
