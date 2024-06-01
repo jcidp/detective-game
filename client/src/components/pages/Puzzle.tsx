@@ -133,7 +133,7 @@ const Puzzle = () => {
       <div className={`fixed right-8 bottom-8 border border-foreground bg-background rounded max-w-[420px] w-full p-4 transition-transform ${showToast ? "translate-x-0" : "translate-x-[150%]"}`}>
         <p>That character isn't there. Keep trying!</p>
       </div>
-      { showModal && <Modal game_duration={modalProps?.game_duration} highscores={modalProps?.highscores} index={modalProps?.index} closeModal={closeModal} />}
+      { showModal && <Modal game_duration={modalProps?.game_duration} highscores={modalProps?.highscores} index={modalProps?.index} gameId={gameId} closeModal={closeModal} />}
     </>
   );
 };
@@ -165,17 +165,30 @@ interface ModalProps {
   game_duration?: number;
   highscores?: Game[];
   index?: number;
+  gameId?: string;
   closeModal?: () => void;
 }
 
-const Modal = ({game_duration, highscores, index, closeModal}: ModalProps) => {
+interface UpdateUserResponse {
+  status: "Success" | "Error"
+}
+
+const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProps) => {
   const [username, setUsername] = useState("");
   const [showInput, setShowInput] = useState(true);
 
   const saveUsername = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!username || username.length < 3 && username.length > 18) return;
-    setShowInput(false);
+    const updateUsername = async () => {
+      const response = await fetchAPI<UpdateUserResponse>({url: `/api/v1/games/${gameId}/username`, options: {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username: username})
+      }});
+      if ( response?.status === "Success" ) setShowInput(false);
+    };
+    updateUsername();
   };
 
   return (

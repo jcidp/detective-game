@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :puzzles, only: [:index]
       post "/characters/puzzle", to: "characters#puzzle"
       resources :games, only: [:create, :update]
+      put "/games/:id/username", to: "games#update_username"
     end
   end
 

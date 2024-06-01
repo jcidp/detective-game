@@ -15,4 +15,13 @@ class Api::V1::GamesController < ApplicationController
     @index = @highscores.find_index(@game) if @highscores
     render json: {game: @game, highscores: @highscores, index: @index}
   end
+
+  def update_username
+    @game = Game.find(params[:id])
+    if @game.update(username: params[:username])
+      render json: {status: "Success"}
+    else
+      render json: {status: "Error"}
+    end
+  end
 end
