@@ -29,6 +29,7 @@ const Puzzle = () => {
   const [foundCharacters, setFoundCharacters] = useState<number[]>([]);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     const getGame = async () => {
@@ -72,7 +73,7 @@ const Puzzle = () => {
       const foundIds = game.characters_found
       setFoundCharacters(foundIds);
       if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver(game);
-      if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) alert("That character isn't there. Keep trying!");
+      if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) handleShowToast();
     };
     getValidation();
   };
@@ -81,11 +82,16 @@ const Puzzle = () => {
     setTimerActive(false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
     setTimer(() => game_duration);
-    setTimeout(() => alert(`You won! Your time was ${game_duration}`), 10);
+    setTimeout(() => alert(`You won! Your time was ${game_duration}`), 50);
   };
 
   const closeBackdrop = () => {
     setSquare({...square, display: false})
+  };
+
+  const handleShowToast = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
   };
 
   return (
@@ -108,8 +114,11 @@ const Puzzle = () => {
       <img className="my-8 hover:cursor-cell" onClick={handleImageClick}
         src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
       />
-      { square.display && <SelectionMenu characters={characters?.map(character => character.name) || []} x={square.x} y={square.y}
+      { square.display && <SelectionMenu characters={characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
         validateSelection={validateSelection} closeBackdrop={closeBackdrop}/>}
+      <div className={`fixed right-8 bottom-8 border border-foreground bg-background rounded max-w-[420px] w-full p-4 transition-transform ${showToast ? "translate-x-0" : "translate-x-[150%]"}`}>
+        <p>That character isn't there. Keep trying!</p>
+      </div>
     </>
   );
 };
