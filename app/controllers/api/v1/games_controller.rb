@@ -10,6 +10,9 @@ class Api::V1::GamesController < ApplicationController
   end
 
   def update
-    render json: Game.validate_coordinates(params[:id], params[:name], params[:x], params[:y])
+    @game = Game.validate_coordinates(params[:id], params[:name], params[:x], params[:y])
+    @highscores = Game.highscores if @game.end_time
+    @index = @highscores.find_index(@game) if @highscores
+    render json: {game: @game, highscores: @highscores, index: @index}
   end
 end

@@ -1,6 +1,8 @@
 class Game < ApplicationRecord
   belongs_to :puzzle
 
+  scope :highscores, -> { where("end_time IS NOT NULL").order(Arel.sql("end_time - created_at")).limit(10) }
+
   def as_json(options={})
     super({ only: [:created_at, :end_time, :username, :characters_found] }.merge(options))
   end

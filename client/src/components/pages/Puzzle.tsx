@@ -21,6 +21,12 @@ interface Game {
   characters_found: number[];
 }
 
+interface ValidationResponse {
+  game: Game;
+  highscores?: Game[];
+  index?: number;
+}
+
 const Puzzle = () => {
   const [characters, error, loading] = useFetchData<Character[]>({url: "/api/v1/characters/puzzle", options: charactersOptions});
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
@@ -64,21 +70,22 @@ const Puzzle = () => {
     console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
     const getValidation = async () => {
-      const game = await fetchAPI<Game>({url: `/api/v1/games/${gameId}`, options: {
+      const data = await fetchAPI<ValidationResponse>({url: `/api/v1/games/${gameId}`, options: {
         method: "PUT",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({name, x: coordinates.x, y: coordinates.y})
       }});
+      const game = data?.game;
       if (!game) return;
       const foundIds = game.characters_found
       setFoundCharacters(foundIds);
-      if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver(game);
+      if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver(data);
       if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) handleShowToast();
     };
     getValidation();
   };
 
-  const handleGameOver = (game: Game) => {
+  const handleGameOver = ({game, highscores, index}: ValidationResponse) => {
     setTimerActive(false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
     setTimer(() => game_duration);
@@ -132,7 +139,6 @@ interface SelectionMenuProps {
 }
 
 const SelectionMenu = ({characters, x, y, validateSelection, closeBackdrop}: SelectionMenuProps) => {
-
   return (
     <div className="absolute inset-0" onClick={closeBackdrop}>
       <div className="absolute" style={{left: x - 24, top: y - 24}}>
