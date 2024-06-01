@@ -36,6 +36,8 @@ const Puzzle = () => {
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalProps, setModalProps] = useState<ModalProps>();
 
   useEffect(() => {
     const getGame = async () => {
@@ -89,7 +91,8 @@ const Puzzle = () => {
     setTimerActive(false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
     setTimer(() => game_duration);
-    setTimeout(() => alert(`You won! Your time was ${game_duration}`), 50);
+    setModalProps({game_duration, highscores, index});
+    setShowModal(true);
   };
 
   const closeBackdrop = () => {
@@ -99,6 +102,10 @@ const Puzzle = () => {
   const handleShowToast = () => {
     setShowToast(true);
     setTimeout(() => setShowToast(false), 2000);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -126,6 +133,7 @@ const Puzzle = () => {
       <div className={`fixed right-8 bottom-8 border border-foreground bg-background rounded max-w-[420px] w-full p-4 transition-transform ${showToast ? "translate-x-0" : "translate-x-[150%]"}`}>
         <p>That character isn't there. Keep trying!</p>
       </div>
+      { showModal && <Modal game_duration={modalProps?.game_duration} highscores={modalProps?.highscores} index={modalProps?.index} closeModal={closeModal} />}
     </>
   );
 };
@@ -151,6 +159,58 @@ const SelectionMenu = ({characters, x, y, validateSelection, closeBackdrop}: Sel
       </div>
     </div>
   )
+};
+
+interface ModalProps {
+  game_duration?: number;
+  highscores?: Game[];
+  index?: number;
+  closeModal?: () => void;
+}
+
+const Modal = ({game_duration, highscores, index, closeModal}: ModalProps) => {
+  const [username, setUsername] = useState("");
+  const [showInput, setShowInput] = useState(true);
+
+  const saveUsername = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!username || username.length < 3 && username.length > 18) return;
+    setShowInput(false);
+  };
+
+  return (
+    <>
+      <div className="fixed bg-black opacity-40 inset-0" onClick={closeModal}></div>
+      <div className="fixed bg-background top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md grid place-content-center w-1/2 py-8 leading-10 text-center">
+        <p>You found everyone, great job!</p>
+        <p>Your time: {game_duration} s</p>
+        { index && 
+          <div>
+            <p>Congratulations on making it to the top ten!</p>
+            <p>Type your username so we can add you to the highscores</p>
+          </div>
+        }
+        { index && showInput &&
+          <form className="flex justify-center gap-4" onSubmit={saveUsername}>
+            <input className="border border-primary px-2 leading-8 rounded" autoFocus placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} minLength={3} maxLength={18} />
+            <button>Save</button>
+          </form>
+        }
+        <p className="font-bold mt-4">Highscores</p>
+        <div className="mb-4">
+          {highscores?.map((game, i) => (
+            <div key={i} className={`grid grid-cols-3 ${i === index && "bg-accent rounded"}`}>
+              <span>{i + 1}</span>
+              {i === index ?
+                <span className="bg-accent">{username}</span> :
+                <span>{game.username}</span>}
+              <span>{(((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000).toFixed(3)} s</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default Puzzle;
