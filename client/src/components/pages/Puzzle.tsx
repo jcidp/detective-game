@@ -54,8 +54,8 @@ const Puzzle = () => {
   useEffect(() => {
     if (!timerActive) return;
     const intervalId = setInterval(() => {
-      setTimer(t => t + 0.01);
-    }, 10);
+      setTimer(t => t + 0.099);
+    }, 99);
     return () => clearInterval(intervalId);
   }, [timerActive]);
 
@@ -114,18 +114,21 @@ const Puzzle = () => {
     <>
       <h2 className="text-2xl text-center mb-4">Test Puzzle</h2>
       <p className="text-xl">Find these characters:</p>
-      <div className="controls">
+      <div className="controls sticky top-0 bg-background py-4">
         <div className="characters my-2 border rounded-lg flex justify-around">
           {!error && !loading && characters && characters.map(character => (
             <div key={character.id}
-              className={`character flex gap-4 ${foundCharacters.includes(character.id) && "line-through text-slate-400"}`}
+              className={`character flex gap-4 items-center ${foundCharacters.includes(character.id) && "line-through text-slate-400"}`}
             >
-              <img src={character.image_url} alt={character.name} />
+              <div className="max-w-32 relative">
+                <img className={`aspect-square object-none ${character.id === 2 ? "object-[50%_15%] -translate-x-6" : "object-top"}`} src={character.image_url} alt={character.name} />
+                {foundCharacters.includes(character.id) && <div className="absolute inset-0 text-center text-green-400 font-bold leading-[130px] text-[140px]">&#10003;</div>}
+              </div>
               <p>{character.name}</p>
             </div>
           ))}
         </div>
-        <p className="timer text-xl font-semibold text-center">{timer.toFixed(3)}</p>
+        <p className="timer text-xl font-semibold text-center">{timer.toFixed(3)} s</p>
         { !timerActive &&
           <div className="flex justify-center gap-4 items-center text-center my-4">
             <button className=" border border-primary rounded-md px-4 py-2 w-36 transition-transform hover:scale-105" onClick={() => navigate(0)}>Play Again</button>
@@ -133,7 +136,7 @@ const Puzzle = () => {
           </div>
         }
       </div>
-      <img className="my-8 hover:cursor-cell" onClick={handleImageClick}
+      <img className="my-8 rounded-md hover:cursor-cell" onClick={handleImageClick}
         src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
       />
       { square.display && <SelectionMenu characters={characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
