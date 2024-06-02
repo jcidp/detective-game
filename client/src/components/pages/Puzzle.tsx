@@ -1,18 +1,28 @@
 import fetchAPI from "@/helpers/fetchAPI";
 import useFetchData from "@/hooks/useFetchData";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const charactersOptions = {
-  method: "POST",
-  headers: {"Content-Type": "application/json"},
-  body: JSON.stringify({puzzle_name: "Where's Waldo?"})
-};
+// const getCharactersOptions = (puzzle_name: string) => {
+//   return {
+//     method: "POST",
+//     headers: {"Content-Type": "application/json"},
+//     body: JSON.stringify({puzzle_name})
+//   }
+// };
 
 interface Character {
   id: number;
   name: string;
   image_url: string;
+}
+
+interface Puzzle {
+  puzzle: {
+    name: string;
+    image_url: string;
+  };
+  characters: Character[];
 }
 
 interface Game {
@@ -29,7 +39,8 @@ interface ValidationResponse {
 }
 
 const Puzzle = () => {
-  const [characters, error, loading] = useFetchData<Character[]>({url: "/api/v1/characters/puzzle", options: charactersOptions});
+  const location = useLocation();
+  const [puzzle, error, loading] = useFetchData<Puzzle>({url: `/api/v1/${location.pathname}`});
   const [square, setSquare] = useState({display: false, x: 0, y: 0});
   const [coordinates, setCoordinates] = useState({x: 0, y: 0});
   const [gameId, setGameId] = useState<string | undefined>();
@@ -43,13 +54,14 @@ const Puzzle = () => {
 
   useEffect(() => {
     const getGame = async () => {
-        const gameId = await fetchAPI<string>({url: "/api/v1/games", options: charactersOptions});
+        console.log(location.pathname);
+        const gameId = await fetchAPI<string>({url: `/api/v1/games/${location.pathname.split("/")[2]}`});
         setGameId(gameId);
         setTimerActive(true);
     };
 
     getGame();
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!timerActive) return;
@@ -83,7 +95,7 @@ const Puzzle = () => {
       if (!game) return;
       const foundIds = game.characters_found
       setFoundCharacters(foundIds);
-      if (characters?.every(char => foundIds.includes(char.id))) return handleGameOver(data);
+      if (data.highscores?.length) return handleGameOver(data);
       if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) handleShowToast();
     };
     getValidation();
@@ -116,7 +128,7 @@ const Puzzle = () => {
       <p className="text-xl">Find these characters:</p>
       <div className="controls sticky top-0 bg-background py-4">
         <div className="characters my-2 border rounded-lg flex justify-around">
-          {!error && !loading && characters && characters.map(character => (
+          {!error && !loading && puzzle?.characters.map(character => (
             <div key={character.id}
               className={`character flex gap-4 items-center ${foundCharacters.includes(character.id) && "line-through text-slate-400"}`}
             >
@@ -137,9 +149,9 @@ const Puzzle = () => {
         }
       </div>
       <img className="my-8 rounded-md hover:cursor-cell" onClick={handleImageClick}
-        src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
+        src={puzzle?.puzzle.image_url} alt={`${puzzle?.puzzle.name} puzzle`}
       />
-      { square.display && <SelectionMenu characters={characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
+      { square.display && <SelectionMenu characters={puzzle?.characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
         validateSelection={validateSelection} closeBackdrop={closeBackdrop}/>}
       <div className={`fixed right-8 bottom-8 border border-foreground bg-background rounded max-w-[420px] w-full p-4 transition-transform ${showToast ? "translate-x-0" : "translate-x-[150%]"}`}>
         <p>That character isn't there. Keep trying!</p>

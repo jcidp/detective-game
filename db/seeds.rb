@@ -18,22 +18,22 @@
 # https://konachan.com/post/show?md5=401d5e4fb96f31ba7f530729a9de8419
 
 puzzles = [
-  {name: "Where's Waldo?", image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"}
+  {name: "waldo", image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"}
 ]
 
 characters = {
-  "Where's Waldo?" => [
+  "waldo" => [
     {
       name: "Waldo",
       x_range: [0.646, 0.693],
       y_range: [0.295, 0.396],
-      image_url: "https://static.wikia.nocookie.net/waldo/images/9/9d/Character.Waldo.jpg/revision/latest"
+      image_url: "https://fourthavenue.org/wp-content/uploads/2022/06/waldo-transp-225x300.png"
     },
     {
       name: "Wizard",
       x_range: [0.619, 0.675],
       y_range: [0.831, 0.892],
-      image_url: "https://static.wikia.nocookie.net/waldo/images/6/60/Character.Whitebeard.jpg/revision/latest"
+      image_url: "https://i.pinimg.com/originals/f6/db/5e/f6db5e93e54ea7dc89af0e902b4bacc5.gif"
     }
   ]
 }

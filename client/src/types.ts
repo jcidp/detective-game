@@ -1,6 +1,6 @@
 interface FetchProps {
   url: string;
-  options: undefined | {
+  options?: {
     method: string;
     headers: {[header: string]: string};
     body: string;
