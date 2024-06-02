@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 import './App.css'
 
 function App() {
@@ -6,7 +6,9 @@ function App() {
   return (
     <>
       <header>
-        <h1 className='mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl py-4 text-center border-b-2'>Detective Game</h1>
+        <Link to="/">
+          <h1 className='mb-4 scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl py-4 text-center border-b-2'>Detective Game</h1>
+        </Link>
       </header>
       <main className='max-w-screen-lg w-full px-8 ms-auto me-auto'>
        <Outlet />

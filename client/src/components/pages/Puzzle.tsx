@@ -1,6 +1,7 @@
 import fetchAPI from "@/helpers/fetchAPI";
 import useFetchData from "@/hooks/useFetchData";
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const charactersOptions = {
   method: "POST",
@@ -38,6 +39,7 @@ const Puzzle = () => {
   const [showToast, setShowToast] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalProps, setModalProps] = useState<ModalProps>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getGame = async () => {
@@ -88,7 +90,7 @@ const Puzzle = () => {
   };
 
   const handleGameOver = ({game, highscores, index}: ValidationResponse) => {
-    setTimerActive(false);
+    setTimerActive(() => false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
     setTimer(game_duration);
     setModalProps({game_duration, highscores, index});
@@ -124,6 +126,12 @@ const Puzzle = () => {
           ))}
         </div>
         <p className="timer text-xl font-semibold text-center">{timer.toFixed(3)}</p>
+        { !timerActive &&
+          <div className="flex justify-center gap-4 items-center text-center my-4">
+            <button className=" border border-primary rounded-md px-4 py-2 w-36 transition-transform hover:scale-105" onClick={() => navigate(0)}>Play Again</button>
+            <Link to="/" className="border border-accent bg-accent rounded-md px-4 py-2 w-36 transition-transform hover:scale-105">More Puzzles</Link>
+          </div>
+        }
       </div>
       <img className="my-8 hover:cursor-cell" onClick={handleImageClick}
         src="https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg" alt="Where's Waldo Puzzle"
