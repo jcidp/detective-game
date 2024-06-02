@@ -90,7 +90,7 @@ const Puzzle = () => {
   const handleGameOver = ({game, highscores, index}: ValidationResponse) => {
     setTimerActive(false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
-    setTimer(() => game_duration);
+    setTimer(game_duration);
     setModalProps({game_duration, highscores, index});
     setShowModal(true);
   };
@@ -164,7 +164,7 @@ const SelectionMenu = ({characters, x, y, validateSelection, closeBackdrop}: Sel
 interface ModalProps {
   game_duration?: number;
   highscores?: Game[];
-  index?: number;
+  index?: number | null;
   gameId?: string;
   closeModal?: () => void;
 }
@@ -197,13 +197,13 @@ const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProp
       <div className="fixed bg-background top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md grid place-content-center w-1/2 py-8 leading-10 text-center">
         <p>You found everyone, great job!</p>
         <p>Your time: {game_duration} s</p>
-        { index && 
+        { typeof index === "number" && 
           <div>
             <p>Congratulations on making it to the top ten!</p>
             <p>Type your username so we can add you to the highscores</p>
           </div>
         }
-        { index && showInput &&
+        { typeof index === "number" && showInput &&
           <form className="flex justify-center gap-4" onSubmit={saveUsername}>
             <input className="border border-primary px-2 leading-8 rounded" autoFocus placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} minLength={3} maxLength={18} />
             <button>Save</button>
