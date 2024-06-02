@@ -23,7 +23,7 @@ const Home = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle>{puzzle.name.toLowerCase().replace(/\b\w/g, s => s.toUpperCase())}</CardTitle>
-                    <CardDescription>Description placeholder text</CardDescription>
+                    <CardDescription>{puzzle.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     Image Placeholder

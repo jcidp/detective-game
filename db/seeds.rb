@@ -18,7 +18,11 @@
 # https://konachan.com/post/show?md5=401d5e4fb96f31ba7f530729a9de8419
 
 puzzles = [
-  {name: "waldo", image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"}
+  {
+    name: "waldo",
+    description: "The classic character finding game!",
+    image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"
+  }
 ]
 
 characters = {
