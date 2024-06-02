@@ -3,14 +3,6 @@ import useFetchData from "@/hooks/useFetchData";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-// const getCharactersOptions = (puzzle_name: string) => {
-//   return {
-//     method: "POST",
-//     headers: {"Content-Type": "application/json"},
-//     body: JSON.stringify({puzzle_name})
-//   }
-// };
-
 interface Character {
   id: number;
   name: string;
@@ -47,7 +39,7 @@ const Puzzle = () => {
   const [foundCharacters, setFoundCharacters] = useState<number[]>([]);
   const [timer, setTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [showToast, setShowToast] = useState<NodeJS.Timeout|undefined>();
   const [showModal, setShowModal] = useState(false);
   const [modalProps, setModalProps] = useState<ModalProps>();
   const navigate = useNavigate();
@@ -114,8 +106,9 @@ const Puzzle = () => {
   };
 
   const handleShowToast = () => {
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 2000);
+    if (showToast) clearTimeout(showToast);
+    const timeout = setTimeout(() => setShowToast(undefined), 2000);
+    setShowToast(() => timeout);
   };
 
   const closeModal = () => {
@@ -181,7 +174,7 @@ const SelectionMenu = ({characters, x, y, validateSelection, closeBackdrop}: Sel
         </li>
       </div>
     </div>
-  )
+  );
 };
 
 interface ModalProps {
