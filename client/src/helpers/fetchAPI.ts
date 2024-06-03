@@ -8,7 +8,6 @@ const fetchAPI = async <T>({url, options}: FetchProps) => {
       throw new Error("server error");
     }
     const result: T = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     if (error instanceof Error) console.log("Fetching data error: ", error);

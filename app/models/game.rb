@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   belongs_to :puzzle
 
-  scope :highscores, ->(id) { where("end_time IS NOT NULL").where("username IS NOT NULL OR id = ?", id).order(Arel.sql("end_time - created_at")).limit(10) }
+  scope :highscores, ->(id, puzzle_id) { where(puzzle_id: puzzle_id).where("end_time IS NOT NULL").where("username IS NOT NULL OR id = ?", id).order(Arel.sql("end_time - created_at")).limit(10) }
 
   def as_json(options={})
     super({ only: [:created_at, :end_time, :username, :characters_found] }.merge(options))

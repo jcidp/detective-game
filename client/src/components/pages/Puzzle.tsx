@@ -21,7 +21,6 @@ const Puzzle = () => {
 
   useEffect(() => {
     const getGame = async () => {
-        console.log(location.pathname);
         const gameId = await fetchAPI<string>({url: `/api/v1/games/${location.pathname.split("/")[2]}`});
         setGameId(gameId);
         setTimerActive(true);
@@ -101,7 +100,7 @@ const Puzzle = () => {
               className={`character flex gap-4 items-center ${foundCharacters.includes(character.id) && "line-through text-slate-400"}`}
             >
               <div className="max-w-32 relative">
-                <img className={`aspect-square object-none ${character.id === 2 ? "object-[50%_15%] -translate-x-6" : "object-top"}`} src={character.image_url} alt={character.name} />
+                <img className={`aspect-square object-${puzzle.puzzle.id === 1 ? "none" : "contain"} ${character.id === 2 ? "object-[50%_15%] -translate-x-6" : "object-top"}`} src={character.image_url} alt={character.name} />
                 {foundCharacters.includes(character.id) && <div className="absolute inset-0 text-center text-green-400 font-bold leading-[130px] text-[140px]">&#10003;</div>}
               </div>
               <p>{character.name}</p>
@@ -116,7 +115,7 @@ const Puzzle = () => {
           </div>
         }
       </div>
-      <img className="my-8 rounded-md hover:cursor-cell" onClick={handleImageClick}
+      <img className="my-8 rounded-md hover:cursor-cell ms-auto me-auto" onClick={handleImageClick}
         src={puzzle?.puzzle.image_url} alt={`${puzzle?.puzzle.name} puzzle`}
       />
       { square.display && <SelectionMenu characters={puzzle?.characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
