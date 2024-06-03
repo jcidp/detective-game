@@ -19,10 +19,10 @@ const Home = () => {
           loading ? <p>Loading...</p> :
           puzzles?.map(puzzle => {
             return (
-              <Link to={`puzzles/${puzzle.name}`} key={puzzle.name} >
+              <Link to={`puzzles/${puzzle.id}`} key={puzzle.id} >
                 <Card>
                   <CardHeader>
-                    <CardTitle>{puzzle.name.toLowerCase().replace(/\b\w/g, s => s.toUpperCase())}</CardTitle>
+                    <CardTitle>{puzzle.name}</CardTitle>
                     <CardDescription>{puzzle.description}</CardDescription>
                   </CardHeader>
                   <CardContent>

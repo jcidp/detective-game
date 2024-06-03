@@ -1,6 +1,6 @@
 class Api::V1::GamesController < ApplicationController
   def show
-    puzzle = Puzzle.find_by(name: params[:id])
+    puzzle = Puzzle.find(params[:id])
     @game = puzzle.games.build
     if @game.save
       render json: JSON.dump(@game.id)
