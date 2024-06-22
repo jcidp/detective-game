@@ -1,7 +1,7 @@
 import fetchAPI from "@/helpers/fetchAPI";
 import useFetchData from "@/hooks/useFetchData";
-import { ModalProps, PuzzleAndCharacters, SelectionMenuProps, ValidationResponse } from "@/types";
-import { useEffect, useState } from "react";
+import { Check, ModalProps, PuzzleAndCharacters, SelectionMenuProps, ValidationResponse } from "@/types";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "../ui/Modal";
 
@@ -17,6 +17,8 @@ const Puzzle = () => {
   const [showToast, setShowToast] = useState<NodeJS.Timeout|undefined>();
   const [showModal, setShowModal] = useState(false);
   const [modalProps, setModalProps] = useState<ModalProps>();
+  const [checks, setChecks] = useState<Check[]>([]);
+  const puzzleImage = useRef<HTMLImageElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,8 +41,10 @@ const Puzzle = () => {
 
   const handleImageClick = (e: React.MouseEvent<HTMLImageElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
-    const x = e.pageX - (e.target.offsetLeft || 0);
-    const y = e.pageY - (e.target.offsetTop || 0);
+    const parent = e.target.offsetParent;
+    if (!(parent instanceof HTMLElement)) return;
+    const x = e.pageX - (parent.offsetLeft || 0);
+    const y = e.pageY - (parent.offsetTop || 0);
     const x_percent = Math.round(x / e.target.offsetWidth * 1000) / 1000;
     const y_percent = Math.round(y / e.target.offsetHeight * 1000) / 1000;
     setSquare({display: true, x: e.pageX, y: e.pageY});
@@ -49,7 +53,6 @@ const Puzzle = () => {
 
   const validateSelection = (e: React.MouseEvent<HTMLUListElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
-    console.log(`Validating ${e.target.textContent} at ${coordinates.x}, ${coordinates.y}`);
     const name = e.target.textContent;
     const getValidation = async () => {
       const data = await fetchAPI<ValidationResponse>({url: `/api/v1/games/${gameId}`, options: {
@@ -61,8 +64,9 @@ const Puzzle = () => {
       if (!game) return;
       const foundIds = game.characters_found
       setFoundCharacters(foundIds);
-      if (data.highscores?.length) return handleGameOver(data);
       if (JSON.stringify(foundIds) === JSON.stringify(foundCharacters)) handleShowToast();
+      else setChecks(checks => [...checks, {x: coordinates.x, y:coordinates.y}]);
+      if (data.highscores?.length) return handleGameOver(data);
     };
     getValidation();
   };
@@ -93,7 +97,7 @@ const Puzzle = () => {
     <>
       <h2 className="text-2xl text-center mb-4">Test Puzzle</h2>
       <p className="text-xl">Find these characters:</p>
-      <div className="controls sticky top-0 bg-background py-4">
+      <div className="controls sticky top-0 bg-background py-4 z-10">
         <div className="characters my-2 border rounded-lg flex justify-around">
           {!error && !loading && puzzle?.characters.map(character => (
             <div key={character.id}
@@ -115,9 +119,14 @@ const Puzzle = () => {
           </div>
         }
       </div>
-      <img className="my-8 rounded-md hover:cursor-cell ms-auto me-auto" onClick={handleImageClick}
-        src={puzzle?.puzzle.image_url} alt={`${puzzle?.puzzle.name} puzzle`}
-      />
+      <div className="relative">
+        <img ref={puzzleImage} className="my-8 rounded-md hover:cursor-cell ms-auto me-auto" onClick={handleImageClick}
+          src={puzzle?.puzzle.image_url} alt={`${puzzle?.puzzle.name} puzzle`}
+        />
+        {
+          checks.length > 0 && checks.map((check, i) => <div key={i} className={`absolute text-center text-green-400 font-bold leading-[130px] text-[4rem] -translate-x-1/2 -translate-y-1/2`} style={{left: check.x * (puzzleImage.current?.offsetWidth || 1), top: check.y * (puzzleImage.current?.offsetHeight || 1)}}>&#10003;</div>)
+        }
+      </div>
       { square.display && <SelectionMenu characters={puzzle?.characters?.filter(char => !foundCharacters.includes(char.id)).map(char => char.name) || []} x={square.x} y={square.y}
         validateSelection={validateSelection} closeBackdrop={closeBackdrop}/>}
       <div className={`fixed right-8 bottom-8 border border-foreground bg-background rounded max-w-[420px] w-full p-4 transition-transform ${showToast ? "translate-x-0" : "translate-x-[150%]"}`}>

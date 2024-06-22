@@ -58,4 +58,9 @@ interface UpdateUserResponse {
   status: "Success" | "Error"
 }
 
-export type {FetchProps, PuzzleI, PuzzleAndCharacters, ValidationResponse, SelectionMenuProps, ModalProps, UpdateUserResponse}
+interface Check {
+  x: number
+  y: number
+}
+
+export type {FetchProps, PuzzleI, PuzzleAndCharacters, ValidationResponse, SelectionMenuProps, ModalProps, UpdateUserResponse, Check}
