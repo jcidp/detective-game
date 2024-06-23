@@ -20,17 +20,17 @@
 puzzles = [
   {
     name: "Where's Waldo",
-    description: "The classic character finding game!",
+    description: "The classic character finding game! Your mission is to find Waldo & Wizard in a medieval carnival.",
     image_url: "https://i.pinimg.com/originals/6f/c8/b6/6fc8b6b6730f8ac917a21c1ccc6ae2f7.jpg"
   },
   {
     name: "Poke Train",
-    description: "Anothe retro pokemon scene, this one with pokemon travelling on a train near the country side.",
+    description: "A retro pokemon scene, with pokemon travelling on a train near the country side.",
     image_url: "https://i.pinimg.com/originals/57/8a/8e/578a8e9a33833c01979e7e5fa132d367.jpg"
   },
   {
     name: "Team Rocket Disaster",
-    description: "A retro pokemon scene where Team Rocket lose pokemon they wanted to steal.",
+    description: "Another retro pokemon scene where Team Rocket loses pokemon they wanted to steal.",
     image_url: "https://i.pinimg.com/originals/8c/e6/9d/8ce69dc431b7660e23b958d45c860e11.jpg"
   }
 ]

@@ -23,19 +23,19 @@ const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProp
 
   return (
     <>
-      <div className="fixed bg-black opacity-40 inset-0" onClick={closeModal}></div>
-      <div className="fixed bg-background top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md grid place-content-center w-1/2 py-8 leading-10 text-center">
+      <div className="fixed bg-black opacity-40 inset-0 z-20" onClick={closeModal}></div>
+      <div className="fixed bg-background top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-md grid place-content-center w-11/12 md:w-1/2 px-2 py-2 md:py-8 leading-10 text-center">
         <p>You found everyone, great job!</p>
         <p>Your time: {game_duration} s</p>
         { typeof index === "number" && 
           <div>
-            <p>Congratulations on making it to the top ten!</p>
-            <p>Type your username so we can add you to the highscores</p>
+            <p>You made it to the top ten!</p>
+            <p>Type your username to save your score</p>
           </div>
         }
         { typeof index === "number" && showInput &&
-          <form className="flex justify-center gap-4" onSubmit={saveUsername}>
-            <input className="border border-primary px-2 leading-8 rounded" autoFocus placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} minLength={3} maxLength={18} />
+          <form className="flex justify-center gap-1 md:gap-4" onSubmit={saveUsername}>
+            <input className="border border-primary px-2 leading-8 rounded" autoFocus placeholder="username" onChange={(e) => setUsername(e.target.value)} value={username} minLength={3} maxLength={12} />
             <button>Save</button>
           </form>
         }
@@ -46,7 +46,8 @@ const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProp
               <span>{i + 1}</span>
               {i === index ?
                 <span className="bg-accent">{username}</span> :
-                <span>{game.username}</span>}
+                <span>{game.username}</span>
+              }
               <span>{(((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000).toFixed(3)} s</span>
             </div>
           ))}
