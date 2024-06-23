@@ -1,4 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import useFetchData from "@/hooks/useFetchData";
 import { PuzzleI } from "@/types";
 import { Link } from "react-router-dom";
@@ -20,15 +19,15 @@ const Home = () => {
           puzzles?.map(puzzle => {
             return (
               <Link to={`puzzles/${puzzle.id}`} key={puzzle.id} >
-                <Card>
-                  <CardHeader>
-                    <CardTitle>{puzzle.name}</CardTitle>
-                    <CardDescription>{puzzle.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
+                <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
+                  <div className="flex flex-col space-y-1.5 p-6">
+                    <h2 className="text-2xl font-semibold leading-none tracking-tight">{puzzle.name}</h2>
+                    <p className="text-sm text-muted-foreground">{puzzle.description}</p>
+                  </div>
+                  <div className="p-6 pt-0">
                     Image Placeholder
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </Link>
             );
           })
