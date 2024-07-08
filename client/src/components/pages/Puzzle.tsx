@@ -4,6 +4,7 @@ import { Check, ModalProps, PuzzleAndCharacters, SelectionMenuProps, ValidationR
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Modal from "../ui/Modal";
+import Loader from "../ui/Loader";
 
 const Puzzle = () => {
   const location = useLocation();
@@ -92,6 +93,10 @@ const Puzzle = () => {
   const closeModal = () => {
     setShowModal(false);
   };
+
+  if (error) return <p>Something went wrong. Please try again later.</p>;
+
+  if (loading) return <Loader />;
 
   return (
     <>

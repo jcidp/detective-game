@@ -1,6 +1,7 @@
 import useFetchData from "@/hooks/useFetchData";
 import { PuzzleI } from "@/types";
 import { Link } from "react-router-dom";
+import Loader from "../ui/Loader";
 
 const Home = () => {
   const [puzzles, error, loading] = useFetchData<PuzzleI[]>({url: "/api/v1/puzzles"});
@@ -13,10 +14,10 @@ const Home = () => {
         <p className="my-4">Find the wanted characters in the picture as fast as you can!</p>
         <p>When you spot one, click on them to identify them.</p>
       </div>
-      <div className="games my-8 grid md:grid-cols-3 gap-4 auto-rows-fr">
-        {
-          loading ? <p>Loading...</p> :
-          puzzles?.map(puzzle => {
+      {
+        loading ? <Loader /> :
+        <div className="games my-8 grid md:grid-cols-3 gap-4 auto-rows-fr">
+          {puzzles?.map(puzzle => {
             return (
               <Link to={`puzzles/${puzzle.id}`} key={puzzle.id} >
                 <div className="rounded-lg border bg-card text-card-foreground shadow-sm h-full">
@@ -27,9 +28,9 @@ const Home = () => {
                 </div>
               </Link>
             );
-          })
-        }
-      </div>
+          })}
+        </div>
+      }
     </>
   );
 };
