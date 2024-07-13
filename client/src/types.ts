@@ -52,6 +52,7 @@ interface ModalProps {
   index?: number | null;
   gameId?: string;
   closeModal?: () => void;
+  visible: boolean;
 }
 
 interface UpdateUserResponse {

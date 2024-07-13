@@ -76,7 +76,7 @@ const Puzzle = () => {
     setTimerActive(() => false);
     const game_duration = ((new Date(game.end_time).getTime()) - (new Date(game.created_at).getTime())) / 1000;
     setTimer(game_duration);
-    setModalProps({game_duration, highscores, index});
+    setModalProps({game_duration, highscores, index, visible: showModal});
     setShowModal(true);
   };
 
@@ -139,7 +139,7 @@ const Puzzle = () => {
         <span>Keep trying!</span>
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-red-500">&#10006;</span>
       </div>
-      { showModal && <Modal game_duration={modalProps?.game_duration} highscores={modalProps?.highscores} index={modalProps?.index} gameId={gameId} closeModal={closeModal} />}
+      <Modal game_duration={modalProps?.game_duration} highscores={modalProps?.highscores} index={modalProps?.index} gameId={gameId} closeModal={closeModal} visible={showModal} />
     </>
   );
 };

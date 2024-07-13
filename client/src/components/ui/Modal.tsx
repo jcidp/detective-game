@@ -3,7 +3,7 @@ import { ModalProps, UpdateUserResponse } from "../../types";
 import fetchAPI from "@/helpers/fetchAPI";
 
 
-const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProps) => {
+const Modal = ({game_duration, highscores, index, gameId, closeModal, visible}: ModalProps) => {
   const [username, setUsername] = useState("");
   const [showInput, setShowInput] = useState(true);
 
@@ -23,8 +23,8 @@ const Modal = ({game_duration, highscores, index, gameId, closeModal}: ModalProp
 
   return (
     <>
-      <div className="fixed bg-black opacity-40 inset-0 z-20" onClick={closeModal}></div>
-      <div className="fixed bg-background top-1/2 left-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-md grid place-content-center w-11/12 md:w-1/2 px-2 py-2 md:py-8 leading-10 text-center">
+      <div className={`fixed bg-black z-20 ${visible ? "opacity-40" : "opacity-0 pointer-events-none"} inset-0 transition-opacity duration-300`} onClick={closeModal}></div>
+      <div className={`fixed bg-background top-1/2 left-1/2 z-20 -translate-x-1/2 ${visible ? "-translate-y-1/2" : "-translate-y-[200vh]"} rounded-md grid place-content-center w-11/12 md:w-1/2 px-2 py-2 md:py-8 leading-10 text-center transition-transform duration-300`}>
         <p>You found everyone, great job!</p>
         <p>Your time: {game_duration} s</p>
         { typeof index === "number" && 
