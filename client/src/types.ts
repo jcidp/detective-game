@@ -43,16 +43,16 @@ interface SelectionMenuProps {
   x: number;
   y: number;
   validateSelection: (e: React.MouseEvent<HTMLUListElement, MouseEvent>) => void;
-  closeBackdrop: () => void;
+  dispatch: React.Dispatch<reducerAction>;
 }
 
 interface ModalProps {
-  game_duration?: number;
+  gameDuration?: number;
   highscores?: Game[];
   index?: number | null;
   gameId?: string;
-  closeModal?: () => void;
-  visible: boolean;
+  dispatch: React.Dispatch<reducerAction>;
+  visible?: boolean;
 }
 
 interface UpdateUserResponse {
@@ -64,4 +64,31 @@ interface Check {
   y: number
 }
 
-export type {FetchProps, PuzzleI, PuzzleAndCharacters, ValidationResponse, SelectionMenuProps, ModalProps, UpdateUserResponse, Check}
+interface reducerAction {
+  type: "loadPuzzle" | "startTimer" | "clickImage" | "selectCharacter" | "closeSelectionMenu" | "closeModal" | "closeToast";
+  event?: React.MouseEvent<HTMLImageElement, MouseEvent> | React.MouseEvent<HTMLUListElement, MouseEvent>;
+  gameId?: string;
+  selectionData?: ValidationResponse;
+}
+
+interface reducerState {
+  square: {
+    display: boolean;
+    x: number;
+    y: number;
+  },
+  coordinates: {
+    x: number;
+    y: number;
+  },
+  foundCharacters: number[];
+  checks: Check[];
+  timer: number;
+  timerActive: boolean;
+  gameId?: string;
+  modalProps?: Omit<ModalProps, "dispatch">;
+  showModal: boolean;
+  showToast: boolean;
+}
+
+export type {FetchProps, PuzzleI, PuzzleAndCharacters, ValidationResponse, SelectionMenuProps, ModalProps, UpdateUserResponse, Check, reducerAction, reducerState}
