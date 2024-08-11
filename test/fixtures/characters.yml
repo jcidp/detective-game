@@ -8,8 +8,22 @@ one:
   puzzle: one
 
 two:
-  name: MyString
+  name: MyString2
   x_range: [1.5, 2]
   y_range: [1.5, 2]
   image_url: MyString
   puzzle: two
+
+three:
+  name: MyString3
+  x_range: [1.5, 2]
+  y_range: [1.5, 2]
+  image_url: MyString
+  puzzle: one
+
+four:
+  name: MyString4
+  x_range: [1.5, 2]
+  y_range: [1.5, 2]
+  image_url: MyString
+  puzzle: three

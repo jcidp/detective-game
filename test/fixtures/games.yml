@@ -9,11 +9,29 @@ one:
 two:
   end_time: 2024-05-25 22:49:57
   username: MyString
-  characters_found: [980190962]
+  characters_found: [298486374]
   puzzle: two
 
 three:
-  end_time: 2024-05-25 22:49:57
+  end_time: 2024-05-25 22:49:58
   username: MyString
-  characters_found: [1]
+  characters_found: [298486374]
   puzzle: two
+
+four:
+  end_time: 
+  username: 
+  characters_found: []
+  puzzle: one
+
+five:
+  end_time: 
+  username: 
+  characters_found: []
+  puzzle: three
+
+six:
+  end_time: 2024-05-25 22:49:58
+  username: MyString
+  characters_found: [281110143]
+  puzzle: three
