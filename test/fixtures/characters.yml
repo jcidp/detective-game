@@ -2,14 +2,14 @@
 
 one:
   name: MyString
-  x_percent: 1.5
-  y_percent: 1.5
+  x_range: [1.5, 2]
+  y_range: [1.5, 2]
   image_url: MyString
   puzzle: one
 
 two:
   name: MyString
-  x_percent: 1.5
-  y_percent: 1.5
+  x_range: [1.5, 2]
+  y_range: [1.5, 2]
   image_url: MyString
   puzzle: two
