@@ -49,7 +49,7 @@ const Puzzle = () => {
     return () => clearTimeout(timeout);
   }, [showToast]);
 
-  const validateSelection = (e: React.MouseEvent<HTMLUListElement, MouseEvent>) => {
+  const validateSelection = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     if (!(e.target instanceof HTMLElement)) return;
     const name = e.target.textContent;
     const getValidation = async () => {
@@ -119,11 +119,11 @@ const SelectionMenu = ({characters, x, y, validateSelection, dispatch}: Selectio
     <div className="absolute inset-0" onClick={() => dispatch({type: "closeSelectionMenu"})}>
       <div className="absolute -translate-x-3 -translate-y-3 md:-translate-x-6 md:-translate-y-6" style={{left: x, top: y}}>
         <div className="w-6 md:w-12 aspect-square border-4 border-black border-dashed"></div>
-        <li className="bg-white rounded list-none">
+        <ul className="bg-white rounded list-none" role="menu">
           {characters.map((character, i) =>
-            <ul key={i} className="px-4 py-2 hover:cursor-pointer rounded hover:bg-blue-100" onClick={validateSelection}>{character}</ul>)
+            <li key={i} className="px-4 py-2 hover:cursor-pointer rounded hover:bg-blue-100" onClick={validateSelection} role="menuitem">{character}</li>)
           }
-        </li>
+        </ul>
       </div>
     </div>
   );

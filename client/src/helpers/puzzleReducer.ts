@@ -14,7 +14,7 @@ export default function puzzleReducer(state: reducerState, action: reducerAction
     case "clickImage": {
       const e = action.event;
       if (!e || !(e.target instanceof HTMLElement)) break;
-      const parent = e.target.offsetParent;
+      const parent = e.target.parentElement;
       if (!(parent instanceof HTMLElement)) break;
       const x = e.pageX - (parent.offsetLeft || 0);
       const y = e.pageY - (parent.offsetTop || 0);

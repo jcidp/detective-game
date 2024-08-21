@@ -9,7 +9,6 @@ const Modal = ({gameDuration, highscores, index, gameId, dispatch, visible}: Mod
 
   const saveUsername = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(username);
     if (!username.trim() || username.trim().length < 3 || username.trim().length > 12) return;
     const updateUsername = async () => {
       const response = await fetchAPI<UpdateUserResponse>({url: `/api/v1/games/${gameId}/username`, options: {

@@ -42,7 +42,7 @@ interface SelectionMenuProps {
   characters: string[];
   x: number;
   y: number;
-  validateSelection: (e: React.MouseEvent<HTMLUListElement, MouseEvent>) => void;
+  validateSelection: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
   dispatch: React.Dispatch<reducerAction>;
 }
 
