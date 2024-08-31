@@ -70,7 +70,7 @@ const Puzzle = () => {
 
   return (
     <>
-      <h2 className="text-2xl text-center mb-4">Test Puzzle</h2>
+      <h2 className="text-2xl text-center mb-4">{puzzle?.puzzle.name}</h2>
       <p className="text-xl">Wanted characters:</p>
       <div className="controls sticky top-0 bg-background py-4 z-10">
         <div className="characters my-2 border rounded-lg flex gap-4 justify-around px-1">
